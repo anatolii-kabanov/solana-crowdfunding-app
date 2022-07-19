@@ -12,34 +12,34 @@ describe('crowdfunding-program', async () => {
     const program = anchor.workspace
         .CrowdfundingProgram as Program<CrowdfundingProgram>;
 
-    const [compaingAccount] = utils.publicKey.findProgramAddressSync(
+    const [campaignAccount] = utils.publicKey.findProgramAddressSync(
         [
-            utils.bytes.utf8.encode("compaing_demo"),
+            utils.bytes.utf8.encode("campaign_demo"),
             anchorProvider.wallet.publicKey.toBuffer(),
         ],
         program.programId
     );
-    
-    it('Should create compaing', async () => {
+
+    it('Should create campaign', async () => {
         /* Call the create function via RPC */
         
         await program.methods
-            .create('test compaing', 'test description', new anchor.BN(5))
+            .create('test campaign', 'test description', new anchor.BN(5))
             .accounts({
-                compaing: compaingAccount,
+                campaign: campaignAccount,
                 user: anchorProvider.wallet.publicKey,
                 systemProgram: anchor.web3.SystemProgram.programId,
             })
             .rpc();
 
-        const compaingAcc = await program.account.compaing.fetch(
-            compaingAccount,
+        const campaignAcc = await program.account.compaing.fetch(
+            campaignAccount,
         );
-        assert.equal(compaingAcc.name, 'test compaing');
-        assert.equal(compaingAcc.description, 'test description');
-        assert.ok(compaingAcc.targetAmount.eq(new anchor.BN(5)));
-        assert.ok(compaingAcc.owner.equals(anchorProvider.wallet.publicKey));
-        assert.ok(compaingAcc.amountDonated.eq(new anchor.BN(0)));
+        assert.equal(campaignAcc.name, 'test campaign');
+        assert.equal(campaignAcc.description, 'test description');
+        assert.ok(campaignAcc.targetAmount.eq(new anchor.BN(5)));
+        assert.ok(campaignAcc.owner.equals(anchorProvider.wallet.publicKey));
+        assert.ok(campaignAcc.amountDonated.eq(new anchor.BN(0)));
     });
 });
 
