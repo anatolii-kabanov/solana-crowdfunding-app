@@ -2,7 +2,8 @@
     "scripts": {
         "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
         "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
-        "build": "anchor build"
+        "build": "anchor build",
+        "copy-idl": "cp ./target/idl/crowdfunding_program.json ../crowdfunding-ui/src/idl.json"
     },
     "dependencies": {
         "@project-serum/anchor": "^0.24.2"
