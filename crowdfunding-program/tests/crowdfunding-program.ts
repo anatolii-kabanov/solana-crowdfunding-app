@@ -32,7 +32,7 @@ describe('crowdfunding-program', async () => {
             })
             .rpc();
 
-        const campaignAcc = await program.account.compaing.fetch(
+        const campaignAcc = await program.account.campaign.fetch(
             campaignAccount,
         );
         assert.equal(campaignAcc.name, 'test campaign');
@@ -41,5 +41,38 @@ describe('crowdfunding-program', async () => {
         assert.ok(campaignAcc.owner.equals(anchorProvider.wallet.publicKey));
         assert.ok(campaignAcc.amountDonated.eq(new anchor.BN(0)));
     });
+
+    it('Should donate to campaign', async () => {
+        await program.methods
+            .donate(new anchor.BN(0.33 * anchor.web3.LAMPORTS_PER_SOL))
+            .accounts({
+                campaign: campaignAccount,
+                user: anchorProvider.wallet.publicKey,
+                systemProgram: anchor.web3.SystemProgram.programId,
+            })
+            .rpc();
+
+        const campaignAcc = await program.account.campaign.fetch(
+            campaignAccount,
+        );
+        assert.ok(campaignAcc.amountDonated.eq(new anchor.BN(0.33 * anchor.web3.LAMPORTS_PER_SOL)));
+    });
+
+    it('Should withdraw to owner wallet', async () => {
+        await program.methods
+            .withdraw(new anchor.BN(0.1 * anchor.web3.LAMPORTS_PER_SOL))
+            .accounts({
+                campaign: campaignAccount,
+                user: anchorProvider.wallet.publicKey,
+            })
+            .rpc();
+            
+        const campaignAcc = await program.account.campaign.fetch(
+            campaignAccount,
+        );
+        console.log('campaignAcc.amountDonated', campaignAcc.amountDonated.toString())
+        assert.ok(campaignAcc.amountDonated.eq(new anchor.BN(0.23 * anchor.web3.LAMPORTS_PER_SOL)));
+    });
 });
+
 

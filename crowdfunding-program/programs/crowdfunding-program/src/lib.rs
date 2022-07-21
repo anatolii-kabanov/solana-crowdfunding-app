@@ -7,13 +7,13 @@ pub mod crowdfunding_program {
     use super::*;
 
     pub fn create(ctx: Context<Create>, name: String, description: String, target_amount: u64) -> Result<()> {
-        let compaing = &mut ctx.accounts.campaign;
-        compaing.name = name;
-        compaing.description = description;
-        compaing.amount_donated = 0;
-        compaing.target_amount = target_amount;
+        let campaign = &mut ctx.accounts.campaign;
+        campaign.name = name;
+        campaign.description = description;
+        campaign.amount_donated = 0;
+        campaign.target_amount = target_amount;
         // * - means dereferencing
-        compaing.owner = *ctx.accounts.user.key;
+        campaign.owner = *ctx.accounts.user.key;
         Ok(())
     }
 
@@ -30,6 +30,8 @@ pub mod crowdfunding_program {
         }
         **campaign.to_account_info().try_borrow_mut_lamports()? -= amount;
         **user.to_account_info().try_borrow_mut_lamports()? += amount;
+        let campaign = &mut ctx.accounts.campaign;
+        campaign.amount_donated -= amount;
         Ok(())
     } 
 
@@ -46,18 +48,18 @@ pub mod crowdfunding_program {
                 ctx.accounts.campaign.to_account_info(),
             ]
         );
-        let compaing = &mut ctx.accounts.campaign;
-        compaing.amount_donated += amount;
+        let campaign = &mut ctx.accounts.campaign;
+        campaign.amount_donated += amount;
         Ok(())
     }
 }
 
 #[derive(Accounts)]
 pub struct Create<'info> {
-    // init means to create compaing account
-    // bump to use unique address for compaing account
+    // init means to create campaign account
+    // bump to use unique address for campaign account
     #[account(init, payer=user, space=9000, seeds=[b"campaign_demo".as_ref(), user.key().as_ref()], bump)]
-    pub campaign: Account<'info, Compaing>,
+    pub campaign: Account<'info, Campaign>,
     // mut makes it changeble (mutable)
     #[account(mut)]
     pub user: Signer<'info>,
@@ -67,7 +69,7 @@ pub struct Create<'info> {
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
     #[account(mut)]
-    pub campaign: Account<'info, Compaing>,
+    pub campaign: Account<'info, Campaign>,
     // mut makes it changeble (mutable)
     #[account(mut)]
     pub user: Signer<'info>,
@@ -76,7 +78,7 @@ pub struct Withdraw<'info> {
 #[derive(Accounts)]
 pub struct Donate<'info> {
     #[account(mut)]
-    pub campaign: Account<'info, Compaing>,
+    pub campaign: Account<'info, Campaign>,
     // mut makes it changeble (mutable)
     #[account(mut)]
     pub user: Signer<'info>,
@@ -84,7 +86,7 @@ pub struct Donate<'info> {
 }
 
 #[account]
-pub struct Compaing {
+pub struct Campaign {
     pub owner: Pubkey,
     pub name: String,
     pub description: String,
@@ -94,7 +96,7 @@ pub struct Compaing {
 
 #[error_code]
 pub enum ErrorCode {
-    #[msg("The user is not the owner of the compaing.")]
+    #[msg("The user is not the owner of the campaign.")]
     InvalidOwner,
     #[msg("Insufficient amount to withdraw.")]
     InvalidWithdrawAmount,

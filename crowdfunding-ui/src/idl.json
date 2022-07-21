@@ -86,7 +86,7 @@
   ],
   "accounts": [
     {
-      "name": "Compaing",
+      "name": "Campaign",
       "type": {
         "kind": "struct",
         "fields": [
@@ -118,7 +118,7 @@
     {
       "code": 6000,
       "name": "InvalidOwner",
-      "msg": "The user is not the owner of the compaing."
+      "msg": "The user is not the owner of the campaign."
     },
     {
       "code": 6001,
