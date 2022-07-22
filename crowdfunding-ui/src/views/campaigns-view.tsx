@@ -31,8 +31,7 @@ export const CampaignsView: React.FC<CampaignsViewProps> = ({ network }) => {
     const [targetAmount, setTargetAmount] = useState<number>(1);
 
     const getProgram = () => {
-        /* create the provider and return it to the caller */
-        /* network set to local network for now */
+        /* create the provider and return it to the caller */ 
         const connection = new Connection(network, opts.preflightCommitment);
         const provider = new AnchorProvider(connection, wallet as any, opts);
         /* create the program interface combining the idl, program ID, and provider */

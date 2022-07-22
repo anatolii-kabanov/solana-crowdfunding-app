@@ -16,7 +16,6 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
 
     const getAllCampaigns = async () => {
         const campaigns = await program.account.campaign.all();
-        console.log('Campaigns: ', campaigns);
         setCampaigns(campaigns);
     };
 
@@ -34,6 +33,7 @@ export const CampaignsTable: React.FC<CampaignsTableProps> = ({
                     systemProgram: web3.SystemProgram.programId,
                 })
                 .rpc();
+            await getAllCampaigns();
         } catch (err) {
             console.error('Donate transaction error: ', err);
         }

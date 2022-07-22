@@ -30,8 +30,6 @@ pub mod crowdfunding_program {
         }
         **campaign.to_account_info().try_borrow_mut_lamports()? -= amount;
         **user.to_account_info().try_borrow_mut_lamports()? += amount;
-        let campaign = &mut ctx.accounts.campaign;
-        campaign.amount_donated -= amount;
         Ok(())
     } 
 

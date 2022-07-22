@@ -70,8 +70,8 @@ describe('crowdfunding-program', async () => {
         const campaignAcc = await program.account.campaign.fetch(
             campaignAccount,
         );
-        console.log('campaignAcc.amountDonated', campaignAcc.amountDonated.toString())
-        assert.ok(campaignAcc.amountDonated.eq(new anchor.BN(0.23 * anchor.web3.LAMPORTS_PER_SOL)));
+        // Should be the same as before
+        assert.ok(campaignAcc.amountDonated.eq(new anchor.BN(0.33 * anchor.web3.LAMPORTS_PER_SOL)));
     });
 });
 
